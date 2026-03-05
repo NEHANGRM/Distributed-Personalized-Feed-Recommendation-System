@@ -18,6 +18,7 @@ view trending posts, and explore system statistics.
 import sys
 import os
 import csv
+from datetime import datetime
 import json
 from collections import defaultdict
 
@@ -225,11 +226,18 @@ def get_stats():
     users = load_users()
     stats = get_interaction_stats()
 
+    # Get last update time from results
+    last_update = "Never"
+    if os.path.exists(USER_FEED_CSV):
+        mtime = os.path.getmtime(USER_FEED_CSV)
+        last_update = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M:%S")
+
     return jsonify({
         "total_users": len(users),
         "users_with_feeds": len(feeds),
         "total_trending_posts": len(trending),
         "interaction_stats": stats,
+        "last_sync": last_update
     })
 
 
@@ -396,6 +404,15 @@ DASHBOARD_HTML = """
             margin-bottom: 2rem;
         }
 
+        .sync-info {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .stat-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -424,6 +441,16 @@ DASHBOARD_HTML = """
             border-color: var(--border-hover);
             transform: translateY(-2px);
             box-shadow: var(--shadow-glow);
+        }
+
+        .sync-status {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(108, 92, 231, 0.1);
+            border-radius: 8px;
+            font-size: 0.75rem;
+            color: var(--accent-secondary);
+            margin-bottom: 2rem;
         }
 
         .stat-label {
@@ -950,6 +977,10 @@ DASHBOARD_HTML = """
         </div>
     </div>
 
+    <div class="sync-status" id="syncStatus">
+        <span id="syncTime">Checking Spark sync status...</span>
+    </div>
+
     <!-- Tabs -->
     <div class="tabs">
         <button class="tab active" onclick="switchTab('feed')" id="tabFeed">🎯 User Feeds</button>
@@ -1086,6 +1117,12 @@ python backend/app.py</div>
             document.getElementById('statFeeds').textContent = data.users_with_feeds || 0;
             document.getElementById('statInteractions').textContent = (data.interaction_stats?.total || 0).toLocaleString();
             document.getElementById('statTrending').textContent = data.total_trending_posts || 0;
+            
+            // Update sync time
+            if (data.last_sync) {
+                document.getElementById('syncTime').innerText = `Last Spark Pipeline Sync: ${data.last_sync}`;
+                document.getElementById('syncStatus').style.display = 'inline-block';
+            }
         } catch(e) {
             console.log('Stats not available yet');
         }
@@ -1152,6 +1189,11 @@ python backend/app.py</div>
                         <p>No recommendations for User #${userId}. Make sure you've run the Spark pipeline first.</p>
                     </div>
                 `;
+            }
+
+            // Update sync time
+            if (data.last_sync) {
+                document.getElementById('syncTime').innerText = `Last Spark Pipeline Sync: ${data.last_sync}`;
             }
         } catch(e) {
             document.getElementById('feedGrid').innerHTML = `
