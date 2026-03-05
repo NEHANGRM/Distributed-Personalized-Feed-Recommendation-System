@@ -1,0 +1,101 @@
+user_id,age,location,interest
+1,25,India,Finance
+2,35,Germany,Technology
+3,26,USA,Health
+4,52,USA,Fashion
+5,45,India,AI
+6,23,Germany,Technology
+7,50,South Korea,AI
+8,53,Germany,Finance
+9,52,Australia,Technology
+10,46,South Korea,Travel
+11,18,UK,Finance
+12,45,Canada,Travel
+13,27,Germany,Education
+14,39,USA,Sports
+15,42,USA,Food
+16,40,South Korea,Travel
+17,20,France,Gaming
+18,25,Australia,Sports
+19,53,Japan,Health
+20,41,South Korea,Technology
+21,22,India,Health
+22,32,Japan,Sports
+23,32,USA,Science
+24,35,France,Health
+25,41,UK,Food
+26,40,Germany,Health
+27,35,USA,Fashion
+28,28,Brazil,Finance
+29,33,UK,Politics
+30,42,Japan,Health
+31,53,Germany,Health
+32,38,India,Technology
+33,20,Canada,Science
+34,35,USA,Technology
+35,54,Canada,Technology
+36,49,Australia,Health
+37,47,UK,Travel
+38,26,Germany,Finance
+39,53,Brazil,Travel
+40,55,Australia,Fashion
+41,43,Canada,Technology
+42,26,Brazil,Politics
+43,23,India,Sports
+44,27,UK,Education
+45,45,South Korea,Sports
+46,42,Australia,Fashion
+47,47,Brazil,Travel
+48,53,India,Health
+49,25,Brazil,Education
+50,35,Canada,Sports
+51,36,Australia,Music
+52,47,India,Finance
+53,34,Brazil,Education
+54,29,Brazil,Sports
+55,37,Brazil,Fashion
+56,30,UK,Food
+57,28,Brazil,Education
+58,51,India,Fashion
+59,38,France,AI
+60,25,Canada,Education
+61,37,Germany,AI
+62,33,South Korea,Sports
+63,23,France,Sports
+64,52,UK,Music
+65,48,Brazil,Music
+66,34,Brazil,Fashion
+67,45,Germany,Gaming
+68,30,Japan,Science
+69,41,France,Gaming
+70,46,USA,Technology
+71,32,USA,Food
+72,19,South Korea,Gaming
+73,32,South Korea,Technology
+74,18,USA,Finance
+75,21,Germany,Sports
+76,20,Canada,Sports
+77,50,Germany,Travel
+78,49,Germany,Gaming
+79,26,South Korea,Fashion
+80,48,Germany,Education
+81,48,Australia,Technology
+82,24,USA,Health
+83,45,Canada,Science
+84,44,France,Finance
+85,21,USA,AI
+86,43,Canada,Education
+87,24,Germany,Technology
+88,30,Brazil,Politics
+89,26,Australia,Music
+90,35,France,Technology
+91,22,France,Education
+92,53,USA,AI
+93,52,India,Sports
+94,33,UK,Science
+95,49,France,Technology
+96,43,India,Music
+97,42,India,Science
+98,34,France,Travel
+99,45,Brazil,Health
+100,49,UK,Technology
