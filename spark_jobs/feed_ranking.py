@@ -50,7 +50,9 @@ def compute_popularity_scores(spark):
     """
     print("\n[1/6] Computing post popularity scores (distributed aggregation)...")
 
-    interactions_df = load_csv(spark, INTERACTIONS_CSV)
+    import pandas as pd
+    interactions_pdf = pd.read_csv(INTERACTIONS_CSV)
+    interactions_df = spark.createDataFrame(interactions_pdf)
 
     # -----------------------------------------------------------------------
     # DISTRIBUTED AGGREGATION: Count interactions per post across all nodes
@@ -93,7 +95,9 @@ def compute_recency_scores(spark):
     """
     print("\n[2/6] Computing post recency scores (distributed date computation)...")
 
-    posts_df = load_csv(spark, POSTS_CSV)
+    import pandas as pd
+    posts_pdf = pd.read_csv(POSTS_CSV)
+    posts_df = spark.createDataFrame(posts_pdf)
 
     # -----------------------------------------------------------------------
     # DISTRIBUTED DATE COMPUTATION: Calculate days since post creation
@@ -137,8 +141,10 @@ def get_user_interaction_scores(spark):
     print("\n[3/6] Loading user interaction scores...")
 
     try:
-        scores_df = load_csv(spark, USER_POST_SCORES_CSV)
-        print("      Loaded precomputed interaction scores.")
+        import pandas as pd
+        scores_pdf = pd.read_csv(USER_POST_SCORES_CSV)
+        scores_df = spark.createDataFrame(scores_pdf)
+        print("      Loaded precomputed interaction scores (Driver).")
     except Exception:
         print("      Running interaction scoring first...")
         from spark_jobs.interaction_scoring import run_interaction_scoring
@@ -168,8 +174,10 @@ def get_collaborative_recommendations(spark):
     print("\n[4/6] Loading collaborative filtering recommendations...")
 
     try:
-        collab_df = load_csv(spark, COLLAB_RECOMMENDATIONS_CSV)
-        print(f"      Loaded {collab_df.count()} collaborative recommendations.")
+        import pandas as pd
+        collab_pdf = pd.read_csv(COLLAB_RECOMMENDATIONS_CSV)
+        collab_df = spark.createDataFrame(collab_pdf)
+        print(f"      Loaded {collab_df.count()} collaborative recommendations (Driver).")
         return collab_df
     except Exception:
         print("      No collaborative recommendations found. Skipping.")
@@ -317,12 +325,13 @@ def run_feed_ranking(spark):
     print("\n      Sample feed (first 3 users):")
     final_feed.filter(F.col("user_id").isin([1, 2, 3])).show(30, truncate=False)
 
-    # Save results
-    print("[6/6] Saving final user feeds...")
+    # Save results (Driver-side collect)
+    print("[6/6] Saving final user feeds (Driver)...")
     ensure_directories()
-    save_csv(final_feed, USER_FEED_CSV)
+    results_pdf = final_feed.toPandas()
+    results_pdf.to_csv(USER_FEED_CSV, index=False)
 
-    print("\n[✓] Feed Ranking complete!")
+    print("\n[OK] Feed Ranking complete!")
     return final_feed
 
 

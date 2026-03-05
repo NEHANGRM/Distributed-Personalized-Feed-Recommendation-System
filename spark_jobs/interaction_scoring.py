@@ -68,11 +68,13 @@ def run_interaction_scoring(spark):
     print("  INTERACTION SCORING - MapReduce Pipeline")
     print("=" * 60)
     
-    # Load interactions dataset — Spark distributes this across 4 partitions
-    print("\n[1/4] Loading interactions data (distributed across 4 nodes)...")
-    interactions_df = load_csv(spark, INTERACTIONS_CSV)
+    # Load interactions dataset on Driver and distribute to workers
+    print("\n[1/4] Loading interactions (Driver-side load for cluster stability)...")
+    import pandas as pd
+    interactions_pdf = pd.read_csv(INTERACTIONS_CSV)
+    interactions_df = spark.createDataFrame(interactions_pdf)
     
-    total_records = interactions_df.count()
+    total_records = interactions_pdf.shape[0]
     num_partitions = interactions_df.rdd.getNumPartitions()
     print(f"      Loaded {total_records} interactions across {num_partitions} partitions")
     
@@ -105,19 +107,18 @@ def run_interaction_scoring(spark):
     )
     
     result_count = user_post_scores.count()
-    print(f"      Reduced {total_records} interactions → {result_count} user-post score pairs")
+    print(f"      Reduced {total_records} interactions -> {result_count} user-post score pairs")
     
     print("\n      Top scored user-post pairs:")
     user_post_scores.show(10, truncate=False)
     
-    # -----------------------------------------------------------------------
-    # Save results
-    # -----------------------------------------------------------------------
-    print("[4/4] Saving user-post scores...")
+    # Save results - Collect back to Driver to save to local disk
+    print("[4/4] Saving user-post scores (Driver-side collect)...")
     ensure_directories()
-    save_csv(user_post_scores, USER_POST_SCORES_CSV)
+    results_pdf = user_post_scores.toPandas()
+    results_pdf.to_csv(USER_POST_SCORES_CSV, index=False)
     
-    print("\n[✓] Interaction Scoring complete!")
+    print("\n[OK] Interaction Scoring complete!")
     return user_post_scores
 
 

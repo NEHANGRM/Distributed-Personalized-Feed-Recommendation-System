@@ -98,8 +98,12 @@ def run_trending_detection_df(spark):
     print("\n  --- DataFrame API Approach ---")
     
     # Load datasets
-    interactions_df = load_csv(spark, INTERACTIONS_CSV)
-    posts_df = load_csv(spark, POSTS_CSV)
+    # Load datasets on Driver
+    import pandas as pd
+    interactions_pdf = pd.read_csv(INTERACTIONS_CSV)
+    posts_pdf = pd.read_csv(POSTS_CSV)
+    interactions_df = spark.createDataFrame(interactions_pdf)
+    posts_df = spark.createDataFrame(posts_pdf)
     
     # -----------------------------------------------------------------------
     # MAP + REDUCE (DataFrame): groupBy + count
@@ -147,12 +151,13 @@ def run_trending_posts(spark):
     # Approach 2: Modern DataFrame API (for the final output)
     trending_df = run_trending_detection_df(spark)
     
-    # Save results
-    print("\n[*] Saving trending posts...")
+    # Save results (Driver-side collect)
+    print("\n[*] Saving trending posts (Driver)...")
     ensure_directories()
-    save_csv(trending_df, TRENDING_POSTS_CSV)
+    results_pdf = trending_df.toPandas()
+    results_pdf.to_csv(TRENDING_POSTS_CSV, index=False)
     
-    print("\n[✓] Trending Posts Detection complete!")
+    print("\n[OK] Trending Posts Detection complete!")
     return trending_df
 
 

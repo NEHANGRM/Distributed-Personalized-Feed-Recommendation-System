@@ -116,13 +116,13 @@ def main():
     
     # Save to CSV
     users_df.to_csv(USERS_CSV, index=False)
-    print(f"[✓] Saved {len(users_df)} users to {USERS_CSV}")
+    print(f"[OK] Saved {len(users_df)} users to {USERS_CSV}")
     
     posts_df.to_csv(POSTS_CSV, index=False)
-    print(f"[✓] Saved {len(posts_df)} posts to {POSTS_CSV}")
+    print(f"[OK] Saved {len(posts_df)} posts to {POSTS_CSV}")
     
     interactions_df.to_csv(INTERACTIONS_CSV, index=False)
-    print(f"[✓] Saved {len(interactions_df)} interactions to {INTERACTIONS_CSV}")
+    print(f"[OK] Saved {len(interactions_df)} interactions to {INTERACTIONS_CSV}")
     
     # Print sample data
     print("\n--- Sample Users ---")
@@ -132,7 +132,7 @@ def main():
     print("\n--- Sample Interactions ---")
     print(interactions_df.head())
     
-    print("\n[✓] Dataset generation complete!")
+    print("\n[OK] Dataset generation complete!")
 
 
 if __name__ == "__main__":

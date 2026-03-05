@@ -1,0 +1,28 @@
+# Spark/Hadoop
+results/
+spark-warehouse/
+derby.log
+metastore_db/
+part-*.csv
+*.parquet
+_SUCCESS
+.spark_staging*
+checkpoint/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+.venv/
+
+# Environment specifics
+spark_diagnostic.py
+run_local_verification.py
+spark_jobs/*_pandas.py
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini

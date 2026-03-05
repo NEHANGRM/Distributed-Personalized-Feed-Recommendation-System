@@ -50,8 +50,10 @@ def build_user_post_matrix(spark):
     
     # Try loading precomputed scores first, fallback to raw interactions
     try:
-        scores_df = load_csv(spark, USER_POST_SCORES_CSV)
-        print("      Loaded precomputed interaction scores.")
+        import pandas as pd
+        scores_pdf = pd.read_csv(USER_POST_SCORES_CSV)
+        scores_df = spark.createDataFrame(scores_pdf)
+        print("      Loaded precomputed interaction scores (Driver).")
     except Exception:
         print("      Precomputed scores not found. Computing from raw interactions...")
         from spark_jobs.interaction_scoring import run_interaction_scoring
@@ -282,15 +284,16 @@ def run_collaborative_filtering(spark):
     # Step 4: Generate recommendations (anti-join)
     recommendations = recommend_posts(spark, top_similar, user_post_matrix)
     
-    # Step 5: Save results
-    print("\n[5/5] Saving collaborative filtering recommendations...")
+    # Step 5: Save results (Driver-side collect)
+    print("\n[5/5] Saving collaborative filtering recommendations (Driver)...")
     ensure_directories()
-    save_csv(recommendations, COLLAB_RECOMMENDATIONS_CSV)
+    results_pdf = recommendations.toPandas()
+    results_pdf.to_csv(COLLAB_RECOMMENDATIONS_CSV, index=False)
     
     print("\n      Top recommendations:")
     recommendations.show(15, truncate=False)
     
-    print("\n[✓] Collaborative Filtering complete!")
+    print("\n[OK] Collaborative Filtering complete!")
     return recommendations
 
 
